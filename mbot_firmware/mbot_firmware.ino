@@ -26,13 +26,16 @@ void setup()
 void loop()
 {
   if(commanderRead()){
-      int cmdLeft = joysticLV * 3;
-  int cmdRight = joysticRV * 3;
 
-  motor1.run(cmdLeft); /* value: between -255 and 255. */
-  motor2.run(cmdRight); /* value: between -255 and 255. */
- 
-  Serial.println(cmdLeft); // Data to send on Xbee chanel 
+    // To customize 
+    // Here is jsut to control motors and send datas 
+      int cmdLeft = joysticLV * 3;
+      int cmdRight = joysticRV * 3;
+    
+      motor1.run(cmdLeft); /* value: between -255 and 255. */
+      motor2.run(cmdRight); /* value: between -255 and 255. */
+     
+      Serial.println(cmdLeft); // Data to send on Xbee chanel 
   }
 
 
