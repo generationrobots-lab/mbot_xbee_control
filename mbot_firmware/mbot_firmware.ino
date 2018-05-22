@@ -7,15 +7,15 @@ MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
 //SoftwareSerial Xbee(10, 9); // RX, TX
 
-    unsigned char vals[7];  // temporary values, moved after we confirm checksum
-    int index;              // -1 = waiting for new packet
-    int checksum;
-    unsigned char status; 
-    signed char joysticLV;      // vertical stick movement = forward speed
-    signed char joysticLH;      // horizontal stick movement = sideways or angular speed
-    signed char joysticRV;      // vertical stick movement = tilt    
-    signed char joysticRH;      // horizontal stick movement = pan (when we run out of pan, turn body?)
-    unsigned char buttons;  // 
+unsigned char vals[7];  // temporary values, moved after we confirm checksum
+int index;              // -1 = waiting for new packet
+int checksum;
+unsigned char status; 
+signed char joysticLV;      // vertical stick movement = forward speed
+signed char joysticLH;      // horizontal stick movement = sideways or angular speed
+signed char joysticRV;      // vertical stick movement = tilt    
+signed char joysticRH;      // horizontal stick movement = pan (when we run out of pan, turn body?)
+unsigned char buttons;  // 
 
     
 void setup()
@@ -25,7 +25,23 @@ void setup()
 
 void loop()
 {
- while(Serial.available() > 0){
+  if(commanderRead()){
+      int cmdLeft = joysticLV * 3;
+  int cmdRight = joysticRV * 3;
+
+  motor1.run(cmdLeft); /* value: between -255 and 255. */
+  motor2.run(cmdRight); /* value: between -255 and 255. */
+ 
+  Serial.println(cmdLeft); // Data to send on Xbee chanel 
+  }
+
+
+  delay(30);
+}
+
+bool commanderRead()
+  {
+    while(Serial.available() > 0){
         if(index == -1){         // looking for new packet
             if(Serial.read() == 0xff){
                 index = 0;
@@ -48,24 +64,18 @@ void loop()
                 
                 
             else{
-                        joysticRV = (signed char)( (int)vals[0]-161 );
-                        joysticRH = (signed char)( (int)vals[1]-94 );
-                        joysticLV = (signed char)( (int)vals[2]-160 );
-                        joysticLH = (signed char)( (int)vals[3]-97 );
+                        joysticRV = (signed char)( (int)vals[0]-161 ); // 161 => offset
+                        joysticRH = (signed char)( (int)vals[1]-94 );// 94 => offset
+                        joysticLV = (signed char)( (int)vals[2]-160 );// 160 => offset
+                        joysticLH = (signed char)( (int)vals[3]-97 );// 97 => offset
                     buttons = vals[4];
                 }
                 index = -1;
                 Serial.flush();
+                return 1;
             }
              
         }
     }
-    int cmdLeft = joysticLV * 3;
-    int cmdRight = joysticRV * 3;
-
-    motor1.run(cmdLeft); /* value: between -255 and 255. */
-    motor2.run(cmdRight); /* value: between -255 and 255. */
-   
-    Serial.println(cmdLeft); // Data to send on Xbee chanel 
-    delay(30);
-}
+    return 0;
+  }
