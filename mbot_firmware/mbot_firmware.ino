@@ -5,7 +5,7 @@
 
 MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
-//SoftwareSerial Xbee(10, 9); // RX, TX
+SoftwareSerial Xbee(10, 9); // RX, TX
 
 unsigned char vals[7];  // temporary values, moved after we confirm checksum
 int index;              // -1 = waiting for new packet
@@ -21,6 +21,7 @@ unsigned char buttons;  //
 void setup()
 {
   Serial.begin(38400);
+  Xbee.begin(38400);
 }
 
 void loop()
@@ -44,20 +45,20 @@ void loop()
 
 bool commanderRead()
   {
-    while(Serial.available() > 0){
+    while(Xbee.available() > 0){
         if(index == -1){         // looking for new packet
-            if(Serial.read() == 0xff){
+            if(Xbee.read() == 0xff){
                 index = 0;
                 checksum = 0;
             }
         }else if(index == 0){
-            vals[index] = (unsigned char) Serial.read();
+            vals[index] = (unsigned char) Xbee.read();
             if(vals[index] != 0xff){
                 checksum += (int) vals[index];
                 index++;
             }
         }else{
-            vals[index] = (unsigned char) Serial.read();
+            vals[index] = (unsigned char) Xbee.read();
             checksum += (int) vals[index];
             index++;
             if(index == 7){ // packet complete    
@@ -74,7 +75,7 @@ bool commanderRead()
                     buttons = vals[4];
                 }
                 index = -1;
-                Serial.flush();
+                Xbee.flush();
                 return 1;
             }
              
