@@ -36,7 +36,7 @@ void loop()
       motor1.run(cmdLeft); /* value: between -255 and 255. */
       motor2.run(cmdRight); /* value: between -255 and 255. */
      
-      Serial.println(cmdLeft); // Data to send on Xbee chanel 
+      Xbee.println(cmdLeft); // Data to send on Xbee chanel 
   }
 
 
