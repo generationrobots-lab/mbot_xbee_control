@@ -30,8 +30,10 @@ void loop()
 
     // To customize 
     // Here is jsut to control motors and send datas 
-      int cmdLeft = joysticLV * 3;
-      int cmdRight = joysticRV * 3;
+    // basic control : vertical data from left joystick to control left motor and vertical data from right joystick to control right motor.
+    
+      int cmdLeft = joysticLV * 3; // basic proportional
+      int cmdRight = joysticRV * 3; // basic proportional
     
       motor1.run(cmdLeft); /* value: between -255 and 255. */
       motor2.run(cmdRight); /* value: between -255 and 255. */
