@@ -30,17 +30,23 @@ void loop()
 
     // To customize 
     // Here is jsut to control motors and send datas 
-      int cmdLeft = joysticLV * 3;
-      int cmdRight = joysticRV * 3;
-    
+
+
+      
+      int cmdLeft = joysticLV * 3; //basic proportional calculation. Can be improved
+      int cmdRight = joysticRV * 3; //basic proportional calculation. Can be improved
+
+
+      // send commands to motors
       motor1.run(cmdLeft); /* value: between -255 and 255. */
       motor2.run(cmdRight); /* value: between -255 and 255. */
-     
-      Xbee.println(cmdLeft); // Data to send on Xbee chanel 
+
+      // send commands to pc
+      Xbee.print(cmdLeft); // Data to send on Xbee chanel 
+      Xbee.print(";");
+      Xbee.println(cmdRight);
   }
-
-
-  delay(30);
+  delay(20);
 }
 
 bool commanderRead()
