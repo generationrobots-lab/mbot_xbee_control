@@ -41,6 +41,11 @@ void loop()
       motor1.run(cmdLeft); /* value: between -255 and 255. */
       motor2.run(cmdRight); /* value: between -255 and 255. */
 
+    // basic control : vertical data from left joystick to control left motor and vertical data from right joystick to control right motor.
+
+  }
+
+
       // send commands to pc
       Xbee.print(cmdLeft); // Data to send on Xbee chanel 
       Xbee.print(";");
